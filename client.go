@@ -331,7 +331,11 @@ func (c *Client) Auth(a sasl.Client) error {
 		var msg []byte
 		switch code {
 		case 334:
-			msg, err = encoding.DecodeString(msg64)
+			if mech != "NTLM" {
+				msg, err = encoding.DecodeString(msg64)
+			} else {
+				msg = []byte(msg64)
+			}
 		case 235:
 			// the last message isn't base64 because it isn't a challenge
 			msg = []byte(msg64)
